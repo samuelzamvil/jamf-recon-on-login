@@ -1,5 +1,3 @@
-Certainly! Here's an updated README that includes instructions for adding the script to Jamf Pro and creating a policy:
-
 # Jamf Recon on Next Login
 
 This script sets up a mechanism to run Jamf Recon on the next user login and then self-destruct.
