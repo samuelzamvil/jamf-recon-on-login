@@ -1,4 +1,6 @@
-# Jamf Recon Once on Next Login
+Certainly! Here's an updated README that includes instructions for adding the script to Jamf Pro and creating a policy:
+
+# Jamf Recon on Next Login
 
 This script sets up a mechanism to run Jamf Recon on the next user login and then self-destruct.
 
@@ -16,14 +18,34 @@ This Bash script creates a LaunchAgent and a LaunchDaemon to trigger a Jamf Reco
 ## Requirements
 
 - macOS
-- Jamf Pro client installed
+- Jamf Pro
 - Root privileges to run the script
 
-## Installation
+## Installation in Jamf Pro
 
-1. Save the script to a file (e.g., `setup_jamf_recon_on_login.sh`)
-2. Make the script executable: `chmod +x setup_jamf_recon_on_login.sh`
-3. Run the script with root privileges: `sudo ./setup_jamf_recon_on_login.sh`
+1. Log in to your Jamf Pro server.
+
+2. Add the script to Jamf Pro:
+   - Go to Settings > Computer Management > Scripts
+   - Click "New"
+   - Name the script (e.g., "Setup Jamf Recon on Next Login")
+   - Copy and paste the entire script content into the "Script Contents" field
+   - Save the script
+
+3. Create a policy to run the script:
+   - Go to Computers > Policies
+   - Click "New"
+   - General
+     - Name the policy (e.g., "Run Jamf Recon on Next Login")
+     - Trigger: Choose as needed (e.g., Recurring Check-in, Custom)
+     - Execution Frequency: Once per computer
+   - Scripts
+     - Add the script you created in step 2
+   - Scope
+     - Configure the scope as needed for your environment
+   - Save the policy
+
+4. The policy will now run on computers in the specified scope, setting up the Jamf Recon on next login mechanism.
 
 ## How it works
 
@@ -39,6 +61,12 @@ The script logs its actions. You may want to modify the `log_message` function t
 
 - Modify the script paths if your Jamf installation is in a non-standard location.
 - Adjust the sleep duration in the `recon_on_login_then_self_destruct.sh` script if needed.
+
+## Troubleshooting
+
+- Check the Jamf Pro policy logs to ensure the script is running as expected.
+- If the Recon isn't triggering, verify that the LaunchAgent and LaunchDaemon are being created correctly.
+- Ensure that the script has the necessary permissions to run on the target machines.
 
 ## Author
 
