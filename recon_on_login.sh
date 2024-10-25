@@ -6,12 +6,19 @@
 CURRENT_USERNAME=$(/bin/ls -l /dev/console | /usr/bin/awk '{ print $3 }')
 CURRENT_UID=$(id -u $CURRENT_USERNAME)
 
+
 # Log function for script logging
 # Function to log messages
 log_message() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1"
     # You might want to add logging to a file here
 }
+
+if [ ! -d "/usr/local/com.github.samuelzamvil/scripts" ]
+then
+    log_message "Creating directory /usr/local/com.github.samuelzamvil/scripts"
+    mkdir -p /usr/local/com.github.samuelzamvil/scripts
+fi
 
 log_message "Creating LaunchAgent and LaunchDaemon to run jamf recon on next login"
 
@@ -51,7 +58,7 @@ cat << EOF > /Library/LaunchDaemons/com.github.samuelzamvil.jamfrecon.onceonlogi
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
-        <string>/usr/local/jamf/scripts/recon_on_login_then_self_destruct.sh</string>
+        <string>/usr/local/com.github.samuelzamvil/scripts/recon_on_login_then_self_destruct.sh</string>
     </array>
     <key>StartInterval</key>
     <integer>60</integer>
@@ -68,7 +75,7 @@ fi
 
 log_message "Create main script to run jamf recon on next login and self-destruct"
 
-cat << 'EOF' > /usr/local/jamf/scripts/recon_on_login_then_self_destruct.sh
+cat << 'EOF' > /usr/local/com.github.samuelzamvil/scripts/recon_on_login_then_self_destruct.sh
 #!/bin/bash
 
 if [ -f /tmp/recent_login.flag ]; then
@@ -86,7 +93,7 @@ if [ -f /tmp/recent_login.flag ]; then
     rm -f /Library/LaunchAgents/com.github.samuelzamvil.recentlogin.plist
 
     # Remove this script
-    rm -f "/usr/local/jamf/scripts/recon_on_login_then_self_destruct.sh"
+    rm -f "/usr/local/com.github.samuelzamvil/scripts/recon_on_login_then_self_destruct.sh"
     
     # Clean up LaunchDaemon
     rm -f /Library/LaunchDaemons/com.github.samuelzamvil.jamfrecon.onceonlogin.plist
@@ -94,10 +101,10 @@ if [ -f /tmp/recent_login.flag ]; then
 fi
 EOF
 
-if [ -f /usr/local/jamf/scripts/recon_on_login_then_self_destruct.sh ]; then
-    log_message "Created script file: /usr/local/jamf/scripts/recon_on_login_then_self_destruct.sh"
+if [ -f /usr/local/com.github.samuelzamvil/scripts/recon_on_login_then_self_destruct.sh ]; then
+    log_message "Created script file: /usr/local/com.github.samuelzamvil/scripts/recon_on_login_then_self_destruct.sh"
 else
-    log_message "Failed to create script file: /usr/local/jamf/scripts/recon_on_login_then_self_destruct.sh"
+    log_message "Failed to create script file: /usr/local/com.github.samuelzamvil/scripts/recon_on_login_then_self_destruct.sh"
     exit 1
 fi
 
@@ -124,7 +131,7 @@ fi
 log_message "Replacing the CURRENT_USERNAME variable in the script"
 
 # Inline replacement method is used to prevent variable expansion in the above heredoc
-sed -i '' "s/\$CURRENT_USERNAME/$CURRENT_USERNAME/" /usr/local/jamf/scripts/recon_on_login_then_self_destruct.sh
+sed -i '' "s/\$CURRENT_USERNAME/$CURRENT_USERNAME/" /usr/local/com.github.samuelzamvil/scripts/recon_on_login_then_self_destruct.sh
 if [ $? -ne 0 ]; then
     log_message "Failed to replace the CURRENT_USERNAME variable in the script"
     exit 1
@@ -132,7 +139,7 @@ fi
 
 log_message "Setting permissions on the script file"
 
-chmod 700 /usr/local/jamf/scripts/recon_on_login_then_self_destruct.sh
+chmod 700 /usr/local/com.github.samuelzamvil/scripts/recon_on_login_then_self_destruct.sh
 if [ $? -ne 0 ]; then
     log_message "Failed to set permissions on the script file"
     exit 1

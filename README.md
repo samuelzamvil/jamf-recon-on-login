@@ -13,6 +13,15 @@ This Bash script creates a LaunchAgent and a LaunchDaemon to trigger a Jamf Reco
 - Runs Jamf Recon after a short delay on user login
 - Self-destructs after successful execution
 
+## Important Warning
+
+⚠️ This script creates LaunchAgent and LaunchDaemon items that may trigger a "Background Items Added" prompt on macOS. To prevent this, you must have a configuration profile in place that allows managed login items for the following labels:
+
+- `com.github.samuelzamvil.recentlogin`
+- `com.github.samuelzamvil.jamfrecon.onceonlogin`
+
+Without this configuration profile, users will see notifications about background items being added, which may cause confusion or concern.
+
 ## Requirements
 
 - macOS
